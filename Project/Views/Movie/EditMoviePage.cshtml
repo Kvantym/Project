@@ -1,0 +1,67 @@
+﻿@model Project.Models.Movie
+
+<h2>Редагувати фільм</h2>
+
+<form asp-action="EditMoviePage" method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="form-group mb-3">
+        <label asp-for="Title"></label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Autor"></label>
+        <input asp-for="Autor" class="form-control" />
+        <span asp-validation-for="Autor" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Genre"></label>
+        <input asp-for="Genre" class="form-control" />
+        <span asp-validation-for="Genre" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Year"></label>
+        <input asp-for="Year" class="form-control" min="1900" max="2100" />
+        <span asp-validation-for="Year" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Rating"></label>
+        <input asp-for="Rating" class="form-control" step="0.1" min="0" max="10" />
+        <span asp-validation-for="Rating" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Description"></label>
+        <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    @if (Model.ImageData != null && Model.ImageMimeType != null)
+    {
+        var base64 = $"data:{Model.ImageMimeType};base64,{Convert.ToBase64String(Model.ImageData)}";
+        <div class="form-group mt-3">
+            <label>Поточне зображення:</label><br />
+            <img src="@base64" alt="Постер" style="max-width: 300px; border: 1px solid #ccc; border-radius: 5px;" />
+        </div>
+    }
+    <div class="form-group mb-3">
+        <label for="Image">Оновити постер (зображення)</label>
+        <input type="file" class="form-control" id="Image" name="Image" accept="image/*" />
+    </div>
+    <div class="d-flex align-items-center gap-2">
+        <button type="submit" class="btn btn-primary">Зберегти</button>
+        <a asp-action="MovieListPage" asp-controller="Movie" class="btn btn-secondary">Скасувати</a>
+    </div>
+
+  
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
