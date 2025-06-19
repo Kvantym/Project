@@ -5,8 +5,107 @@
 }
 
 <h2>Список фільмів</h2>
+<form asp-action="SortMovie" method="get" class="mb-4">
+    <div class="row g-2 align-items-end">
+        <div class="col-md-3">
+            <label class="form-label">Фільтрувати за:</label>
+            <select id="filterField" name="filterField" class="form-select">
+                <option value="Autor">Автор</option>
+                <option value="Title">Назва</option>
+                <option value="Genre">Жанр</option>
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label">Значення:</label>
+            <input type="text" id="filterValue" name="filterValue" class="form-control" />
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label">Сортувати за роком:</label>
+            <select id="sortOrderYear" name="sortOrderYear" class="form-select">
+                <option value="">(Без сортування)</option>
+                <option value="YearAsc">Рік ↑</option>
+                <option value="YearDesc">Рік ↓</option>
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label">Сортувати за рейтингом:</label>
+            <select id="sortOrderRating" name="sortOrderRating" class="form-select">
+                <option value="">(Без сортування)</option>
+                <option value="RatingAsc">Рейтинг ↑</option>
+                <option value="RatingDesc">Рейтинг ↓</option>
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label for="minYearRange" class="form-label">Мінімальний рік: <span id="minYearValue">@ViewBag.MinYear</span></label>
+            <input type="range" class="form-range" id="minYearRange" name="minYear" min="1900" max="2100" value="@ViewBag.MinYear" />
+        </div>
+
+        <div class="col-md-3">
+            <label for="minRatingRange" class="form-label">Мінімальний рейтинг: <span id="minRatingValue">@ViewBag.MinRating</span></label>
+            <input type="range" class="form-range" id="minRatingRange" name="minRating" step="0.1" min="0" max="10" value="@ViewBag.MinRating" />
+        </div>
+
+        <div class="col-md-3">
+            <button type="submit" class="btn btn-primary w-100">🔍 Застосувати</button>
+        </div>
+        <div class="col-md-3">
+            <button type="submit" id="resetFiltersBtn" class="btn btn-secondary w-100">✖ Скинути фільтри</button>
+        </div>
+    </div>
+</form>
+
+<script>
+    // Встановлюємо вибрані значення у select і input після рендеру
+    document.getElementById('filterField').value = '@(ViewBag.FilterField ?? "")';
+    document.getElementById('filterValue').value = '@(ViewBag.FilterValue ?? "")';
+    document.getElementById('sortOrderYear').value = '@(ViewBag.SortOrderYear ?? "")';
+    document.getElementById('sortOrderRating').value = '@(ViewBag.SortOrderRating ?? "")';
+
+    // Встановлюємо значення повзунків та підписів
+    let minYear = '@(ViewBag.MinYear ?? 1900)';
+    document.getElementById('minYearRange').value = minYear;
+    document.getElementById('minYearValue').textContent = minYear;
+
+    let minRating = '@(ViewBag.MinRating ?? 0)';
+    document.getElementById('minRatingRange').value = minRating;
+    document.getElementById('minRatingValue').textContent = minRating;
+
+    // Оновлення підписів при зміні повзунків
+    document.getElementById('minYearRange').addEventListener('input', function() {
+        document.getElementById('minYearValue').textContent = this.value;
+    });
+    document.getElementById('minRatingRange').addEventListener('input', function() {
+        document.getElementById('minRatingValue').textContent = this.value;
+    });
+
+    document.getElementById("resetFiltersBtn").addEventListener("click", function(){
+
+        document.getElementById("filterField").value="";
+        document.getElementById("filterValue").value="";
+        document.getElementById("sortOrderYear").value="";
+        document.getElementById("sortOrderRating").value="";
+        document.getElementById("minYearValue").textContent=1900;
+        document.getElementById("minYearRange").value=1900;
+        document.getElementById("minRatingRange").value=0;
+        document.getElementById("minRatingValue").textContent = 0;
+
+        document.getElementById("filterForm").onsubmit();
+       
+    })
+</script>
+
+
+
+
+
 
 <div class="movies-container" style="display:flex; flex-wrap: wrap; gap: 20px;">
+
+
     @foreach (var movie in Model)
     {
         string? imageBase64 = null;
@@ -49,4 +148,5 @@
             </div>
         </div>
     }
+
 </div>
