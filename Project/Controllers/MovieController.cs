@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Project.Models;
 
 namespace Project.Controllers
@@ -7,10 +10,11 @@ namespace Project.Controllers
     public class MovieController : Controller
     {
         private readonly AppDbConectin _conectin;
-
-        public MovieController(AppDbConectin conectin)
+        private readonly UserManager<IdentityUser> _userManager;
+        public MovieController(AppDbConectin conectin, UserManager<IdentityUser> userManager)
         {
             _conectin = conectin;
+            _userManager = userManager;
         }
         public ActionResult Index()
         {
@@ -24,17 +28,25 @@ namespace Project.Controllers
             return View("MovieAddPage");
         }
         [HttpGet]
-        public IActionResult MovieListPage()
+        [Authorize]
+        public async Task<IActionResult> MovieListPage()
         {
-            var movies = _conectin.movies.ToList();
+            var userId = _userManager.GetUserId(User);
+
+            var movies = await _conectin.movies.Where(m=> m.UserId == userId).ToListAsync();
             return View("MovieListPage", movies);
         }
-
+      
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> AddMovie(Movie movie, IFormFile Image)
         {
-            if (ModelState.IsValid)
+            var userId = _userManager.GetUserId(User);
+            movie.UserId = userId;
+
+            if (!ModelState.IsValid)
             {
+              
                 if (Image != null && Image.Length > 0)
                 {
                     using (var memoryStream = new MemoryStream())
@@ -48,7 +60,7 @@ namespace Project.Controllers
                 await _conectin.SaveChangesAsync();
                 return RedirectToAction("Index", "Home", new { message = "Фільм додано" });
             }
-            return View("MovieAddPAge", movie);
+            return View("MovieAddPage", movie);
         }
 
         [HttpPost]

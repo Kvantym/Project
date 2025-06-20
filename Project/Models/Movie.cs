@@ -1,4 +1,6 @@
-﻿namespace Project.Models
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace Project.Models
 {
     public class Movie
     {
@@ -19,5 +21,8 @@
 
         // MIME-тип (наприклад: image/jpeg, image/png)
         public string? ImageMimeType { get; set; }
+
+        public string UserId {  get; set; }
+        public IdentityUser User { get; set; }
     }
 }

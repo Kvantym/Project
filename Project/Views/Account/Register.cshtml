@@ -1,0 +1,27 @@
+﻿@model Project.ViewModels.RegisterViewModel
+
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <form asp-action="Register" method="post" class="w-100 p-4 border rounded shadow" style="max-width: 400px; background-color: #fff;">
+        <h2 class="mb-4 text-center">Реєстрація</h2>
+
+        <div class="mb-3">
+            <label asp-for="Email" class="form-label"></label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Password" class="form-label"></label>
+            <input asp-for="Password" class="form-control" type="password" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="ConfirmPassword" class="form-label"></label>
+            <input asp-for="ConfirmPassword" class="form-control" type="password" />
+            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-warning w-100">Зареєструватися</button>
+    </form>
+</div>

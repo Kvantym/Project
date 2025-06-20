@@ -1,9 +1,13 @@
-﻿namespace Project
-{
-    using Microsoft.EntityFrameworkCore;
-    using Project.Models;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using Project.Models;
 
-    public class AppDbConectin : DbContext
+namespace Project
+{
+
+
+    public class AppDbConectin : IdentityDbContext<IdentityUser>
     {
         public AppDbConectin(DbContextOptions<AppDbConectin> options) : base(options)
         {
